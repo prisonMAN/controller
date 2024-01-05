@@ -3,7 +3,7 @@
 import apriltag
 import cv2
 import time
-
+import numpy as np
 import kalman
 
 #kalman = kalman.KalmanFilter()
@@ -30,7 +30,8 @@ while (1):
 
     if len(tags) > 0:
         center = tags[0].center
-        print(type(center))
+        #print(type(tags[0].corners[0].astype(int)))
+        #print(type(np.array([tags[0].corners[0].astype(int), tags[0].corners[0].astype(int), tags[0].corners[0].astype(int), tags[0].corners[0].astype(int)], dtype=np.double)))
 
 
     for tag in tags:
