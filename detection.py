@@ -46,7 +46,7 @@ class PoseEstimator():
 
             # 求解相机位姿
             found, rvec, tvec = cv.solvePnP(self.object_3d_points, self.object_2d_point, self.camera_matrix, self.dist_coefs)
-            #TODO:完成姿态解算这一部分
+            #FIXME:完成姿态解算这一部分
             rotM = cv.Rodrigues(rvec)[0]
             camera_postion = -np.matrix(rotM).T * np.matrix(tvec)
 
