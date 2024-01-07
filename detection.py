@@ -3,8 +3,9 @@ import cv2 as cv
 import apriltag
 import math
 
+from tracker import TargetTracker
 
-class PoseEstimator():
+class TargetDetector():
     def __init__(self):
         self.at_detector = apriltag.Detector(apriltag.DetectorOptions(families='tag36h11'))
         self.x = None
@@ -28,7 +29,7 @@ class PoseEstimator():
         self.display_origin = False  # 展示源图像
         self.display_debug = True
 
-    def getPose(self, src):
+    def getTarget(self, src):
         if self.display_origin:
             cv.imshow("Origin", src)
 
@@ -36,6 +37,9 @@ class PoseEstimator():
         gray = cv.cvtColor(src, cv.COLOR_BGR2GRAY)
         tags = self.at_detector.detect(gray)
 
+        return tags
+
+    def getPose(self, tags):
         if len(tags) > 0:
             left_top = tags[0].corners[0].astype(int)
             right_top = tags[0].corners[1].astype(int)
@@ -58,6 +62,8 @@ class PoseEstimator():
             self.pitch = math.atan2(-rotM[2][0], math.sqrt(rotM[2][1] * rotM[2][1] + rotM[2][2]) * rotM[2][2]) * (
                     180 / math.pi)
             self.roll = math.atan2(rotM[1][0], rotM[0][0]) * (180 / math.pi)
+
+            return np.array([self.x, self.y, self.z, self.yaw, self.pitch, self.roll])
 
     def show(self, src):
         if self.display_debug is True:
