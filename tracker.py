@@ -2,6 +2,7 @@
 # coding: UTF-8
 import time
 import numpy as np
+import cv2 as cv
 
 from kalman import KalmanFilter
 
@@ -9,7 +10,7 @@ from kalman import KalmanFilter
 class TargetTracker:
     def __init__(self):
         self.Kf = None
-        self.MaxTrackingDistance = 0.8
+        self.MaxTrackingDistance = 122222
         self.KFStateReset()
         self.m_PrevTime = time.perf_counter()
 
@@ -47,12 +48,14 @@ class TargetTracker:
         distance = np.linalg.norm(temp[:3] - [x, y, z])
 
         if distance < self.MaxTrackingDistance:  # 距离小于阈值，认为是同一个目标，后续可以加别的条件
-            arr = np.array([x, y, z])
             targetstate = self.Kf.update(np.array([x, y, z]))
+            print("1")
         else:
             self.KFStateReset()
             targetstate = None  # 各种原因引起的误识别，串口发送上一次发送的值
 
         self.m_PrevTime = currentTime
+
+        print(targetstate)
 
         return targetstate

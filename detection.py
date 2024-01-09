@@ -18,6 +18,7 @@ class TargetDetector:
         self.yaw = None
         self.pitch = None
         self.roll = None
+        self.arr_post = arr = np.empty((6,))
 
         self.camera_matrix = np.array(([598.29493, 0, 304.76898],
                                        [0, 597.56086, 233.34762],
@@ -76,6 +77,8 @@ class TargetDetector:
             arr[4] = self.pitch
             arr[5] = self.roll
 
+            self.arr_post = arr
+
             if self.display_debug is True:
                 if self.object_2d_point is not None:
                     # 将 self.object_2d_point[0] 转换为整数，并将其作为元组的一部分传递给 cv.circle 函数
@@ -96,10 +99,11 @@ class TargetDetector:
                     cv.putText(src, '未识别到，发送滤波数据', (10, 20), cv.FONT_HERSHEY_SIMPLEX, 0.3, (0, 0, 255), 2)
 
                 cv.imshow('Debug', src)
+            print(arr.astype(int))
 
-            return arr.astype(int)
+            return arr
         else:
-            return np.empty((6,))  # 如果全为0则串口发送上一次发送的数据
+            return self.arr_post  # 如果全为0则返回上一次观测的数据
 
     def run(self, src) -> ndarray[Any, dtype[Any]]:
         return self.getPose(src, self.getTarget(src))
