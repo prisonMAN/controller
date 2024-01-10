@@ -4,7 +4,6 @@ import numpy as np
 import cv2 as cv
 import apriltag
 import math
-import sys
 
 from numpy import ndarray, dtype
 
@@ -63,8 +62,7 @@ class TargetDetector:
             self.z = tvec[2]
 
             self.yaw = math.atan2(rotM[2][1], rotM[2][2]) * (180 / math.pi)
-            self.pitch = math.atan2(-rotM[2][0], math.sqrt(rotM[2][1] * rotM[2][1] + rotM[2][2]) * rotM[2][2]) * (
-                    180 / math.pi)
+            self.pitch = math.atan2(-rotM[2][0], math.sqrt(abs(rotM[2][1] * rotM[2][1] + rotM[2][2] * rotM[2][2]))) * (180 / math.pi)
             self.roll = math.atan2(rotM[1][0], rotM[0][0]) * (180 / math.pi)
 
             arr = np.empty((6,))
