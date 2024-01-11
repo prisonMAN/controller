@@ -1,10 +1,23 @@
-# 1，初始化时apriltag中心需要跟相机光心在同一条直线上，且与此直线垂直
-# 2，由于相机的成像区域为三角形，距离太近的话y方向和z方向的范围会过小导致无法进行完全映射，故相机与apriltag需要隔开一个最小距离
-# 3，在自定义控制器下划分辅助线，标明摄像头视野范围和自定义控制器逻辑范围，并与相机底座固定（最好做成可变形的手提箱）
-# 4，补光，拿寝室台灯
-# 5，apriltag可做成戒指或手柄，应为竖直方向握持（该姿态手部自由度较高）
-# 6，需要根据操作手的臂展来调整移动步长和初始距离，所以要单留出接口且尽快测试
+import numpy as np
 
-# V1.0
-# 初始化方式为当apriltag到达一定三维空间范围时通过ui提示标明初始化完成，超出范围时同理
-# 范围不用与机械臂最大范围相同，够用就行
+
+class Controller:
+    def __init__(self, x, y, z):
+        self.x0 = x
+        self.y0 = y
+        self.z0 = z
+        self.width = 400
+        self.length = 300
+        self.height = 400
+        self.stride = 2
+        self.deadzone = 1
+
+    def calDisDiff(self, x, y, z):
+        return np.array([x - self.x0, y - self.y0, z - self.z0])
+
+    def restrictArea(self, x, y, z):
+        if x > self.length or y > self.width or z > self.height:
+            print("Out of range!!!")
+
+    def
+

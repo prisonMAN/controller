@@ -5,11 +5,11 @@ import numpy as np
 import pandas as pd
 
 from detection import TargetDetector
-from tracker import TargetTracker
+
 
 cap = cv.VideoCapture(0)
 detector = TargetDetector()
-tracker = TargetTracker()
+
 
 def exports(arr, filename):
     df = pd.DataFrame(arr.reshape(1, -1), columns=["x", "y", "z", "yaw", "pitch", "roll"])
@@ -26,8 +26,7 @@ while 1:
 
     arr = np.asarray(detector.run(frame), dtype=np.ndarray)
     exports(arr, "output.csv")
-    filtered_arr = tracker.trackTarget(arr[0], arr[1], arr[2])
-    exports(filtered_arr, "filtered_output.csv")
+
 
 cap.release()
 cv.destroyAllWindows()
