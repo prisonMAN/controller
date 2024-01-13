@@ -44,8 +44,10 @@ def plot_csv_waveform_single(file_path, column_index, flag):
     plt.ylabel('Value')
     if flag == 0:
         plt.title(column_index)
-    else:
+    elif flag == 1:
         plt.title(column_index + 10)
+    elif flag == 2:
+        plt.title(column_index + 20)
     plt.grid(True)
     plt.show()
 
@@ -57,13 +59,13 @@ def main():
     plot_csv_waveform_single('output.csv', 2, 0)
 
     # plot_csv_waveform('flitered.csv')
-    plot_csv_waveform_single('flitered.csv', 0, 1)
-    plot_csv_waveform_single('flitered.csv', 1, 1)
-    plot_csv_waveform_single('flitered.csv', 2, 1)
+    plot_csv_waveform_single('flitered_output.csv', 0, 1)
+    plot_csv_waveform_single('flitered_output.csv', 1, 1)
+    plot_csv_waveform_single('flitered_output.csv', 2, 1)
 
-    # plot_csv_waveform_single('all.csv', 0, 1)
-    # plot_csv_waveform_single('all.csv', 1, 1)
-    # plot_csv_waveform_single('all.csv', 2, 1)
+    # plot_csv_waveform_single('all.csv', 0, 2)
+    # plot_csv_waveform_single('all.csv', 1, 2)
+    # plot_csv_waveform_single('all.csv', 2, 2)
 
 
 # 检查脚本是否直接运行

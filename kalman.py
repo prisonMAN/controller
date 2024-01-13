@@ -1,9 +1,7 @@
 import numpy as np
 
-
 class KalmanFilter:
     def __init__(self, state):
-        self.P_pre = None
         self.F = state['F']
         self.H = state['H']
         self.Q = state['Q']
@@ -14,8 +12,7 @@ class KalmanFilter:
         self.X_pre = np.zeros(self.n)
         self.X_post = state['Xpost'] if state['Xpost'].shape[0] else np.zeros(self.n)
 
-    def predict(self, T):
-        self.F[0, 3] = self.F[1, 4] = self.F[2, 5] = T
+    def predict(self):
 
         self.X_pre = np.dot(self.F, self.X_post)
         self.P_pre = np.dot(np.dot(self.F, self.P_post), self.F.T) + self.Q

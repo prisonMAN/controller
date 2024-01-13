@@ -4,10 +4,13 @@ import cv2 as cv
 import numpy as np
 import pandas as pd
 
+from controller import Controller
 from detection import TargetDetector
 
-cap = cv.VideoCapture(1)
+
+cap = cv.VideoCapture(0)
 detector = TargetDetector()
+controller = Controller()
 
 
 def exports(arr, filename):
@@ -23,9 +26,9 @@ while 1:
     if k == 27:
         break
 
-    arr = np.asarray(detector.run(frame), dtype=np.ndarray)
-    # if arr is not None:
-    #     exports(arr, "all.csv")
+    arr = detector.run(frame)
+    controller.run(arr[0], arr[1], arr[2])
+
 
 cap.release()
 cv.destroyAllWindows()
