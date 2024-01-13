@@ -6,8 +6,7 @@ import pandas as pd
 
 from detection import TargetDetector
 
-
-cap = cv.VideoCapture(0)
+cap = cv.VideoCapture(1)
 detector = TargetDetector()
 
 
@@ -25,8 +24,8 @@ while 1:
         break
 
     arr = np.asarray(detector.run(frame), dtype=np.ndarray)
-    exports(arr, "output.csv")
-
+    # if arr is not None:
+    #     exports(arr, "all.csv")
 
 cap.release()
 cv.destroyAllWindows()

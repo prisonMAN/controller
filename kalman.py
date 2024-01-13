@@ -1,7 +1,9 @@
 import numpy as np
 
+
 class KalmanFilter:
     def __init__(self, state):
+        self.P_pre = None
         self.F = state['F']
         self.H = state['H']
         self.Q = state['Q']
