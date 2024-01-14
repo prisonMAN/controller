@@ -4,7 +4,6 @@ import numpy as np
 import cv2 as cv
 import apriltag
 import math
-import time
 import pandas as pd
 
 from numpy import ndarray, dtype
@@ -25,7 +24,7 @@ class TargetDetector:
         self.yaw = None
         self.pitch = None
         self.roll = None
-        self.arr_post = arr = np.empty((6,))
+        self.arr_post = np.empty((6,))
 
         self.camera_matrix = np.array(([598.29493, 0, 304.76898],
                                        [0, 597.56086, 233.34762],
@@ -44,14 +43,14 @@ class TargetDetector:
         self.Kf = None
         self.MaxTrackingDistance = 122222
         self.KFStateReset()
-        self.m_PrevTime = time.perf_counter()
 
     def getTarget(self, src):
-        if self.display_origin:
-            cv.imshow("Origin", src)
+        # if self.display_origin:
+        #     cv.imshow("Origin", src)
 
         # 检测apriltag
         gray = cv.cvtColor(src, cv.COLOR_BGR2GRAY)
+        cv.imshow("Origin", gray)
         tags = self.at_detector.detect(gray)
 
         return tags
@@ -74,9 +73,9 @@ class TargetDetector:
             self.y = tvec[1]
             self.z = tvec[2]
 
-            self.yaw = math.atan2(rotM[2][1], rotM[2][2]) * (180 / math.pi)
-            self.pitch = math.atan2(-rotM[2][0], math.sqrt(abs(rotM[2][1] * rotM[2][1] + rotM[2][2] * rotM[2][2]))) * (
+            self.yaw = math.atan2(-rotM[2][0], math.sqrt(abs(rotM[2][1] * rotM[2][1] + rotM[2][2] * rotM[2][2]))) * (
                         180 / math.pi)
+            self.pitch = math.atan2(rotM[2][1], rotM[2][2]) * (180 / math.pi)
             self.roll = math.atan2(rotM[1][0], rotM[0][0]) * (180 / math.pi)
 
             arr = np.empty((6,))
@@ -89,15 +88,23 @@ class TargetDetector:
             arr[4] = self.pitch
             arr[5] = self.roll
 
+            #后续可以改成状态差
+            if abs(arr[0] - self.arr_post[0]) > 500:
+                arr[0] = self.arr_post[0]
+            if abs(arr[1] - self.arr_post[1]) > 500:
+                arr[1] = self.arr_post[1]
+            if abs(arr[2] - self.arr_post[2]) > 500:
+                arr[2] = self.arr_post[2]
+
             self.arr_post = arr
 
             if self.display_debug is True:
                 if self.object_2d_point is not None:
                     # 将 self.object_2d_point[0] 转换为整数，并将其作为元组的一部分传递给 cv.circle 函数
-                    cv.circle(src, tuple(self.object_2d_point[0].astype(int)), 4, (255, 0, 0), 2)  # left-top
-                    cv.circle(src, tuple(self.object_2d_point[1].astype(int)), 4, (255, 0, 0), 2)  # right-top
+                    cv.circle(src, tuple(self.object_2d_point[0].astype(int)), 4, (0, 0, 255), 2)  # left-top
+                    cv.circle(src, tuple(self.object_2d_point[1].astype(int)), 4, (0, 255, 0), 2)  # right-top
                     cv.circle(src, tuple(self.object_2d_point[2].astype(int)), 4, (255, 0, 0), 2)  # right-bottom
-                    cv.circle(src, tuple(self.object_2d_point[3].astype(int)), 4, (255, 0, 0), 2)  # left-bottom
+                    cv.circle(src, tuple(self.object_2d_point[3].astype(int)), 4, (255, 255, 0), 2)  # left-bottom
 
                     text1 = f'x: {arr.astype(int)[0]}, y: {arr.astype(int)[1]}'
                     text2 = f'z: {arr.astype(int)[2]}'
